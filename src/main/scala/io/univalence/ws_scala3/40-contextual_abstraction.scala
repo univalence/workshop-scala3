@@ -2,38 +2,35 @@ package io.univalence.ws_scala3
 
 import io.univalence.ws_scala3.internal.exercise_tools._
 
-/** =Contextual abstraction= */
+/**
+ * =Contextual abstraction=
+ *
+ * The Scala 2 implicits era is gone. All the implicits use cases has
+ * been rethought and new words like summon, using, extension or given
+ * are here to replace the usual implicit def, implicit val and implicit
+ * class.
+ *
+ * The implicits still exist but we should use the new words.
+ */
 
 object _01_given {
-
-  /**
-   * We represent with a trait a behavior applicable to some types A.
-   * Here, we represent types whose elements can combine to get an
-   * element of the same type (yes, you can call it a semigroup).
-   *
-   * @tparam A
-   *   type on which the combinator can be used
-   */
   trait Combinator[A] {
     def combine(lhs: A, rhs: A): A
   }
 
   /**
-   * Now, we inject in the current scope an anonymous instance of
-   * combinator applicable to Int. We use the keywork `given` to define
-   * such a variable.
+   * We can implicit give an instance of our type class using given
+   * keyword.
    */
   given Combinator[Int] with {
     override def combine(lhs: Int, rhs: Int): Int = lhs + rhs
   }
 
   /**
-   * We also inject another anonymous instance of combinator applicable
-   * to String this time.
+   * We also have syntaxic way of declaring an instance of our type
+   * class composed by only one function.
    */
-  given Combinator[String] with {
-    override def combine(lhs: String, rhs: String): String = lhs + rhs
-  }
+  given Combinator[String] = (lhs: String, rhs: String) => lhs + rhs
 
   /** Note that you can give a name to an instance. */
   given boolCombinator: Combinator[Boolean] with {
@@ -47,10 +44,15 @@ object _01_given {
 
         /**
          * As our instances of Combinator are anonymous, we cannot get
-         * them by their, as we used to do when we have defined a
+         * them by their names, as we used to do when we have defined a
          * variable. Here, we will rather use `summon`.
+         *
+         * Info: in Scala 2, it was named `implicitly`.
          */
         check(summon[Combinator[Int]].combine(1, 2) == ??)
+
+        /** We can style use a name if we want to. */
+        check(boolCombinator.combine(true, false) == ??)
       }
 
       exercise("Combine 2 Strings", activated = false) {
@@ -114,6 +116,11 @@ object _02_using {
       }
 
       exercise("using with anonymous context parameter", activated = true) {
+
+        /**
+         * You don't have to specify a name for your context parameter.
+         * To call it, you can `summon` it.
+         */
         def fold[A](init: A)(l: List[A])(using Combinator[A]): A = l.fold(init)(summon[Combinator[A]].combine)
 
         check(fold(0)(List(1, 2, 4))(using intCombinator) == ??)
@@ -121,6 +128,8 @@ object _02_using {
       }
 
       exercise("context bound", activated = true) {
+
+        /** You still can use context bound instead of using. */
         def fold[A: Combinator](init: A)(l: List[A]): A = l.fold(init)(summon[Combinator[A]].combine)
 
         check(fold(0)(List(1, 2, 5)) == ??)
@@ -182,5 +191,29 @@ object _03_typeclass {
 //        check(List(1, 2, 3).show == "[1,2,3]")
 //        check(Option(List(1, 2, 3)).show == "Some([1,2,3])")
       }
+    }
+}
+
+object _04_implicit_conversion {
+
+  case class Rational(n: Int, d: Int) { self =>
+    def *(other: Rational): Rational = Rational(n * other.n, d * other.d)
+  }
+
+  /**
+   * Scala 3 provides a Conversion typeclass to handle implicit
+   * conversion. Here we define a way to combine seemlessly rational
+   * numbers with int providing to the compiler a way to convert an int
+   * into rational number.
+   *
+   * In Scala 2, we had to use implicit def instead.
+   */
+  given Conversion[Int, Rational] with
+    def apply(int: Int): Rational = Rational(int, 1)
+
+  @main
+  def _04_implicit(): Unit =
+    section("PART 4 - Implicit conversion") {
+      check(Rational(3, 1) * 2 == Rational(6, 1))
     }
 }
