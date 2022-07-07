@@ -2,10 +2,7 @@ package io.univalence.ws_scala3
 
 import io.univalence.ws_scala3.internal.exercise_tools._
 
-/**
- * =Structural selection=
- *
- */
+/** =Structural selection= */
 
 object _01_structural_selection {
 
