@@ -198,10 +198,10 @@ object _04_adt {
 
   sealed trait Cases
   object Cases {
-    case class First {
+    case object First extends Cases {
       def doSomething(): Unit = println("Something")
     }
-    case class Second {
+    case object Second extends Cases {
       def doSomethingElse(): Unit = println("Something else")
     }
   }
