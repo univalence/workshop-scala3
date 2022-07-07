@@ -38,33 +38,78 @@ object _01_extension_method {
       items:   List[OrderItem]
   )
 
-  /**
-   * By this extension method, we add a behavior to Order in a view to
-   * get the total price of an order.
-   *
-   * The declaration starts with a parameter representing the order on
-   * which the method will be added. Then, we can declare the method
-   * that will be added to the order.
-   */
-  extension (o: Order) def total(): Double = o.items.foldLeft(0.0)((sum, item) => sum + item.quantity * item.unitPrice)
-
   @main
   def _01_order_extension(): Unit =
     section("PART 1 - extension method on order") {
+
+      /**
+       * By this extension method, we add a behavior to Order in a view
+       * to get the total price of an order.
+       *
+       * The declaration starts with a parameter representing the order
+       * on which the method will be added. Then, we can declare the
+       * method that will be added to the order.
+       */
+      extension (o: Order)
+        def total(): Double = o.items.foldLeft(0.0)((sum, item) => sum + item.quantity * item.unitPrice)
+
+      val order =
+        Order(
+          orderId = "123",
+          storeId = "Plouzané",
+          items =
+            List(
+              OrderItem(productId = "chocolat", quantity = 2, unitPrice  = 2.0),
+              OrderItem(productId = "café", quantity     = 10, unitPrice = 3.0),
+              OrderItem(productId = "pomme", quantity    = 6, unitPrice  = 3.0)
+            )
+        )
+
       exercise("What will be the total price?", activated = true) {
-        val order =
-          Order(
-            orderId = "123",
-            storeId = "Plouzané",
-            items =
-              List(
-                OrderItem(productId = "chocolat", quantity = 2, unitPrice  = 2.0),
-                OrderItem(productId = "café", quantity     = 10, unitPrice = 3.0),
-                OrderItem(productId = "pomme", quantity    = 6, unitPrice  = 3.0)
-              )
+        check(order.total() == ??)
+      }
+
+      exercise("Count items", activated = false) {
+        // TODO uncomment the line below and declare the extension method `countProducts`
+//        check(order.countProducts() == 18)
+      }
+    }
+
+}
+
+/**
+ * It is possible to add many extension methods to a type in one
+ * declaration.
+ */
+object _02_multi_extension {
+
+  extension (s: List[String]) {
+    def smallest: String = s.minBy(_.length)
+
+    def largest: String = s.maxBy(_.length)
+
+    def padToLargest: List[String] = {
+      val largestSize = s.largest.length
+
+      s.map(_.padTo(largestSize, ' '))
+    }
+  }
+
+  @main
+  def _01_add_multi_extension(): Unit =
+    section("Add multiple extension methods") {
+      exercise("Multiple extension method", activated = true) {
+        val l =
+          List(
+            "genoux",
+            "choux",
+            "cailloux",
+            "hiboux"
           )
 
-        check(order.total() == ??)
+        check(l.smallest == ??)
+        check(l.largest == ??)
+        check(l.padToLargest == ??)
       }
     }
 
