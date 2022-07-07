@@ -114,4 +114,9 @@ def _03_syntax_conversion(): Unit =
  *
  * It is up to you (and your team) to choose the style you want to
  * adopt.
+ *
+ * Note that Scala 3 proposes different compilation options to force the
+ * adoption of a block style or another (`-new-syntax`, `-old-syntax`,
+ * `-indent`, `-no=indent`). If necessary, the compiler can rewrite your
+ * blocks so they match the selected style.
  */
