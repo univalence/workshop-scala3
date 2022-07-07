@@ -2,7 +2,29 @@ package io.univalence.ws_scala3
 
 import io.univalence.ws_scala3.internal.exercise_tools._
 
-object _01_ext {
+/**
+ * =Extension methods=
+ * An '''extension method''' is a method that is added by a developer in
+ * a specific scope to an existing type outside of this type
+ * declaration. It is useful especially when you want to ad behavior to
+ * class that you are not allowed to modify.
+ *
+ * Extension methods already existed in Scala 2, but you have to declare
+ * an implicit class to add methods. In Scala 3, you benefit of a
+ * specific syntax.
+ */
+object _01_extension_method {
+
+  /**
+   * We propose to represent client orders to a store. An order is
+   * composed of an proper ID, the store ID, and a list bought items.
+   * Each item contains the ID of the product bought, its quantity, and
+   * its unit price.
+   *
+   * We will suppose that those case classes are automatically generated
+   * from a schema (eg. protobuf, avro...). So, we cannot modify them to
+   * add methods, because they will disappear at the next regeneration.
+   */
 
   case class OrderItem(
       productId: String,
@@ -16,35 +38,34 @@ object _01_ext {
       items:   List[OrderItem]
   )
 
+  /**
+   * By this extension method, we add a behavior to Order in a view to
+   * get the total price of an order.
+   *
+   * The declaration starts with a parameter representing the order on
+   * which the method will be added. Then, we can declare the method
+   * that will be added to the order.
+   */
   extension (o: Order) def total(): Double = o.items.foldLeft(0.0)((sum, item) => sum + item.quantity * item.unitPrice)
 
-  class Record_(elems: (String, Any)*) extends Selectable {
-    private val fields = elems.toMap
-
-    def selectDynamic(name: String): Any = fields(name)
-  }
-
-  type Person =
-    Record_ {
-      val id: String
-      val name: String
-      val age: Int
-    }
-
   @main
-  def _01_Extension(): Unit =
-    section("PART 1 - extension method") {
-      val data =
-        List(
-          "id"   -> "123",
-          "name" -> "Paul",
-          "age"  -> 22
-        )
+  def _01_order_extension(): Unit =
+    section("PART 1 - extension method on order") {
+      exercise("What will be the total price?", activated = true) {
+        val order =
+          Order(
+            orderId = "123",
+            storeId = "Plouzané",
+            items =
+              List(
+                OrderItem(productId = "chocolat", quantity = 2, unitPrice  = 2.0),
+                OrderItem(productId = "café", quantity     = 10, unitPrice = 3.0),
+                OrderItem(productId = "pomme", quantity    = 6, unitPrice  = 3.0)
+              )
+          )
 
-      val p = Record_(data*).asInstanceOf[Person]
-
-      println(p.name)
-      println(p.selectDynamic("name"))
+        check(order.total() == ??)
+      }
     }
 
 }
