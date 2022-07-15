@@ -14,7 +14,7 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  * So, this is an example with braces.
  */
 @main
-def _01_a_with_parentheses(): Unit = {
+def _01_a_with_braces(): Unit = {
   val hoursInDay  = 24.0
   val daysInWeek  = 7.0
   val hoursInWeek = hoursInDay * daysInWeek
@@ -24,7 +24,7 @@ def _01_a_with_parentheses(): Unit = {
 
 /** This is an example without braces. */
 @main
-def _01_b_with_parentheses(): Unit =
+def _01_b_without_braces(): Unit =
   val hoursInDay  = 24.0
   val daysInWeek  = 7.0
   val hoursInWeek = hoursInDay * daysInWeek
@@ -36,7 +36,7 @@ def _01_b_with_parentheses(): Unit =
  * Ruby. In this approach, the compile is not indentation-sensitive.
  */
 @main
-def _01_c_with_parentheses(): Unit =
+def _01_c_with_markup(): Unit =
   val hoursInDay  = 24.0
   val daysInWeek  = 7.0
   val hoursInWeek = hoursInDay * daysInWeek
@@ -62,8 +62,11 @@ def plusOne(value: Int) =
 @main
 def _02_indentation_confusion(): Unit =
   section("Confusion with indentation") {
-    // The expected value below might not be the one you was thinking of...
-    check(plusOne(10) == ??)
+    exercise("Try to guess the value", activated = true) {
+      // The expected value below might not be the one you was thinking of...
+      // But why? Try to fix the code above.
+      check(plusOne(10) == ??)
+    }
   }
 
 /**
@@ -98,14 +101,16 @@ object MyObject:
 @main
 def _03_syntax_conversion(): Unit =
   section("Syntax conversion") {
-    check(MyObject.a == 42)
+    exercise("By changing the syntax of MyObject by hand, check that the result stay the same", activated = true) {
+      check(MyObject.a == 42)
 
-    check(MyObject.signOf(42) == 1)
-    check(MyObject.signOf(-42) == -1)
-    check(MyObject.signOf(0) == 0)
+      check(MyObject.signOf(42) == 1)
+      check(MyObject.signOf(-42) == -1)
+      check(MyObject.signOf(0) == 0)
 
-    check(MyObject.addOptions(Some(1), None).isEmpty)
-    check(MyObject.addOptions(Some(1), Some(2)).contains(3))
+      check(MyObject.addOptions(Some(1), None).isEmpty)
+      check(MyObject.addOptions(Some(1), Some(2)).contains(3))
+    }
   }
 
 /**
