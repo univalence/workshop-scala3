@@ -15,6 +15,7 @@ import io.univalence.ws_scala3.internal.exercise_tools._
 object _01_simple_enum {
 
   /**
+   * ==Simple enum==
    * A simple enum is just an enumeration of constants with a proper
    * identity. It comes with predefined members:
    *   - `[enum].values`: array of all available values in the enum
@@ -87,17 +88,18 @@ object _01_simple_enum {
   }
 }
 
+/**
+ * ==ADT==
+ * Scala enums such as Colors is composed by singleton cases.
+ *
+ * But we can also have parametrized cases. It allows us to create ADTs.
+ *
+ * For the example, we will create an ADT that describes a function,
+ * such as `f(x) = x + x + 10` as the expression
+ * `Add(Add(Var,Var),Const(10))`.
+ */
 object _02_arithmetic_expression {
 
-  /**
-   * Scala enums such as Colors is composed by singleton cases.
-   *
-   * But we can also have parametrize cases. It allows us to create
-   * ADTs.
-   *
-   * For the example we will create an ADT that describe a function such
-   * as: f(x) = x + x + become Add(Add(Var,Var),Const(10))
-   */
   enum Arithmetic:
     case Var
     case Const(a: Int)
@@ -121,6 +123,11 @@ object _02_arithmetic_expression {
     }
 }
 
+/**
+ * ==Parameterized enum==
+ * We might want to associate each item of enum to specific values. This
+ * can be done in the same way as Java.
+ */
 object _03_enum_with_constructor {
 
   /** We can parametrize enumeration. */
@@ -138,24 +145,30 @@ object _03_enum_with_constructor {
      * works for any Notes.
      */
     def time: Double = 1.0 / frequency.toFloat
+
+    def octave(n: Int): Double = frequency * Math.pow(2.0, n - 4)
   }
 
   @main
   def _03_Notes(): Unit =
     section("PART 3 - enum with constructor") {
       check(Note.A4.frequency == ??)
+      check(Note.A4.time == ??)
+      check(Note.A4.octave(5) == ??)
+      check(Note.A4.octave(3) == ??)
     }
 }
 
+/**
+ * ==GADT==
+ * Enumeration in Scala also support type parameters implying the
+ * creation of GADTs.
+ *
+ * As an example, we can reproduce the Option ADT using Scala 3
+ * enumerations.
+ */
 object _04_adt {
 
-  /**
-   * Enumeration in Scala also support type parameters implying the
-   * creation of GADTs.
-   *
-   * As an example, we can reproduce the Option ADT using Scala 3
-   * enumerations.
-   */
   enum PeutEtre[+A] {
     case Present(a: A)
     case Rien
@@ -183,27 +196,25 @@ object _04_adt {
 
   /**
    * However enumerations don't replace entirely the ADTs created using
-   * sealed traits. Indeed, for example, you can't specify custom
+   * sealed traits. Indeed, for example, you cannot specify custom
    * functions for each enumeration cases.
    */
-
   // This code doesn't not compile.
-  //enum Cases:
-  //  case FIRST {
-  //    def doSomething(): Unit = ???
+  // enum Cases:
+  //  case First {
+  //    def doSomething(): Unit = println("Something")
   //  }
-  //  case SECOND {
-  //    def doSomethingElse(): Unit = ???
+  //  case Second {
+  //    def doSomethingElse(): Unit = println("Something else")
   //  }
 
   sealed trait Cases
-  object Cases {
+  object Cases:
     case object First extends Cases {
       def doSomething(): Unit = println("Something")
     }
     case object Second extends Cases {
       def doSomethingElse(): Unit = println("Something else")
     }
-  }
 
 }
