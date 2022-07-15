@@ -69,7 +69,7 @@ object _01_extension_method {
         check(order.total() == ??)
       }
 
-      exercise("Count items", activated = false) {
+      exercise("You turn! Count items in an order", activated = false) {
         // TODO uncomment the line below and declare the extension method `countProducts`
 //        check(order.countProducts() == 18)
       }
@@ -80,6 +80,29 @@ object _01_extension_method {
 /**
  * It is possible to add many extension methods to a type in one
  * declaration.
+ *
+ * Here is the syntax for this feature:
+ * {{{
+ *   extension (value: T) {
+ *     def m1 = ???
+ *     def m2 = ???
+ *   }
+ * }}}
+ *
+ * Here again, you can use the different syntaxes. Like the Python one:
+ * {{{
+ *   extension (value: T):
+ *     def m1 = ???
+ *     def m2 = ???
+ * }}}
+ *
+ * Or the Ruby one:
+ * {{{
+ *   extension (value: T)
+ *     def m1 = ???
+ *     def m2 = ???
+ *   end extension
+ * }}}
  */
 object _02_multi_extension {
 
