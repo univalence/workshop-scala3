@@ -4,12 +4,21 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
 
 /**
  * =Code-block delimitation=
- * Braces for the function body are not necessary anymore if it has many
- * lines. So, it is up to you to add or not those braces.
+ * Scala 3 comes with new syntaxes to delimit code-blocks. Here, we will
+ * first focus on function body, before taking a look the other
+ * constructs.
+ *
+ * In terms of new syntax, for exemple, braces for the function body are
+ * not necessary anymore, if the function has many lines. So, it is up
+ * to you to add or not those braces.
  *
  * In the case, you do not add braces, the compiler becomes
  * indentation-sensitive — meaning that the indentation defines the
  * code-block. Python has the same functionality.
+ *
+ * You can also put an end marker to a function (like with Ruby) or use
+ * braces back again. If you stay consistent in terms of code-block
+ * delimitation, you can mix the different syntaxes.
  *
  * So, this is an example with braces.
  */
@@ -34,6 +43,11 @@ def _01_b_without_braces(): Unit =
 /**
  * You can also use a tag to indicate the end of your code-block, like
  * Ruby. In this approach, the compile is not indentation-sensitive.
+ *
+ * Pay attention to the name you put after the end marker. It should fit
+ * exactly the name of the function. Typically, you may have
+ * hard-to-solve-stupid-compilation-errors if you change the name of the
+ * function by hand.
  */
 @main
 def _01_c_with_markup(): Unit =
@@ -42,7 +56,7 @@ def _01_c_with_markup(): Unit =
   val hoursInWeek = hoursInDay * daysInWeek
 
   println(s"There is $hoursInWeek hours in a week")
-end _01_c_with_parentheses
+end _01_c_with_markup
 
 /**
  * ==Confusion with indentation==
@@ -71,13 +85,19 @@ def _02_indentation_confusion(): Unit =
 
 /**
  * ==Syntax conversion==
- * There is also a new syntax available for other kind of constructs in
+ * There is also new syntaxes available for other kind of constructs in
  * Scala 3, like if expression, for-comprehension, object declaration...
+ *
+ * Now that you have seen the different syntaxes for functions, you are
+ * ready to understand those new syntaxes for other kind of Scala 3
+ * constructs.
  *
  * TODO Below, convert [[MyObject]] and its content so it match the
  * Scala 2 syntax.
  */
 
+// Guess what, this is the Python-like syntax for object. You have the
+// same for trait, class, case class...
 object MyObject:
   val a = 42
 
@@ -98,6 +118,15 @@ object MyObject:
     for a <- l
     do println(a)
 
+  def roleOf(name: String): String = {
+    name match
+      case "Jon"                     => "Product owner"
+      case "Mary"                    => "Scrum master"
+      case "Tom" | "Mark" | "Jessie" => "Developer"
+      case _                         => "unknown"
+    end match
+  }
+
 @main
 def _03_syntax_conversion(): Unit =
   section("Syntax conversion") {
@@ -110,6 +139,10 @@ def _03_syntax_conversion(): Unit =
 
       check(MyObject.addOptions(Some(1), None).isEmpty)
       check(MyObject.addOptions(Some(1), Some(2)).contains(3))
+
+      check(MyObject.roleOf("Jon") == "Product owner")
+      check(MyObject.roleOf("Jessie") == "Developer")
+      check(MyObject.roleOf("David") == "unknown")
     }
   }
 
