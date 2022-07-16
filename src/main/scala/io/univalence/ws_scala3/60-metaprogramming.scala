@@ -58,8 +58,10 @@ object _01_inlining {
         check(signOf(1) == ??)
       }
       exercise("example that crash at compile-time", activated = false) {
-        // TODO uncomment and try to compile the file
+        // TODO uncomment the line below and try to compile the file
 //        check(signOf("0".toInt) == Sign.Zero)
+        // You can compile the file simply trying to running it or by
+        // using `sbt compile` or `sbt run`.
       }
     }
 
