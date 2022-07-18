@@ -294,15 +294,14 @@ object _03_typeclass {
       }
     }
 
+  given [A]: Combinator[List[A]] with {
+    extension (lhs: List[A]) override def combine(rhs: List[A]): List[A] = ???
+  }
+
   @main
   def _40_05_combinator_typeclass_for_list(): Unit =
     section("PART 5 - Create your own typeclass instance (bis)") {
       exercise("Give an implementation for the instance below", activated = false) {
-
-        given [A]: Combinator[List[A]] with {
-          extension (lhs: List[A]) override def combine(rhs: List[A]): List[A] = ???
-        }
-
         check(fold(List.empty[Int])(List(List(1, 2), List(3, 4), List(5, 6))) == List(1, 2, 3, 4, 5, 6))
       }
     }
