@@ -24,10 +24,11 @@ import io.univalence.ws_scala3.internal.exercise_tools._
  * You can inline functions, variables, parameters, match-structures,
  * and if-structures.
  *
- * The problem of inlining in Scala is not really visible once applied
- * by the compiler, unless you do a before-after comparaison of the
- * produced bytecode, or unless it produces a compilation error. But we
- * can see its action, especially with inline if and inline recursion.
+ * The problem in making exercises with inlining in Scala is that this
+ * feature does not really give visible results once applied by the
+ * compiler, unless you do a before-after comparaison of the produced
+ * bytecode, or unless it produces a compilation error. We will focus on
+ * the last case.
  */
 
 object _60_inlining {
@@ -44,6 +45,10 @@ object _60_inlining {
     case Negative, Zero, Positive
   }
 
+  /**
+   * To use an inline-if, you have first to define an
+   * ''inline-function''.
+   */
   inline def signOf(value: Int): Sign =
     inline if (value == 0) Sign.Zero
     else inline if (value > 0) Sign.Positive
@@ -56,14 +61,37 @@ object _60_inlining {
         check(signOf(0) == ??)
         check(signOf(-1) == ??)
         check(signOf(1) == ??)
+        check(signOf((5 + 6) * (7 - 12)) == ??)
       }
-      exercise("example that crash at compile-time", activated = false) {
+
+      exercise("example that fails at compile-time", activated = false) {
         // TODO uncomment the line below and try to compile the file
 //        check(signOf("0".toInt) == Sign.Zero)
         // You can compile the file simply trying to running it or by
         // using `sbt compile` or `sbt run`.
       }
+
+      /**
+       * Scala 3 also defines the notion of ''inline-variable''. This
+       * kind of variable can be use in expression using inline-if.
+       */
+      exercise("example that works with inline variable", activated = true) {
+        inline val a = 42
+        check(signOf(a) == ??)
+      }
+
+      exercise("example that fails at compile-time with normal variable", activated = false) {
+        val a = 42
+        // TODO uncomment this line and see what happens
+//        check(signOf(a) == ??)
+      }
     }
+
+  /**
+   * The inline-if forces the developer to use "simple" expressions. By
+   * "simple", we mean an expression that can be compute by the compiler
+   * only.
+   */
 
   /**
    * ==Recursive inline function==
@@ -91,7 +119,7 @@ object _60_inlining {
       }
 
       exercise("at which value does the compiler fails?", activated = false) {
-        // TODO uncomment those lines one by one. run the program for every uncommented line.
+        // TODO uncomment those lines one by one. Run the program for every uncommented line.
         //    check(sumUpTo(30) == 465)
         //    check(sumUpTo(31) == 496)
         //    check(sumUpTo(32) == 528)
@@ -107,10 +135,10 @@ object _60_inlining {
 
 /**
  * ==Transparent inline==
- * Inline resolution happens after the compiler has resolve types. There
- * may use cases where it is interested to act before the type
- * resolution and to force this resolution. This is what you get with
- * ''transparent inline''.
+ * Inline resolution happens after the compiler has resolved types.
+ * There may be use cases where it is interested to act before the type
+ * resolution happens and to force this type resolution. This is what
+ * you get with ''transparent inline''.
  */
 object _02_transparent_inline {
 
@@ -132,8 +160,13 @@ object _02_transparent_inline {
   def _60_03_transparent_inline(): Unit =
     section("PART 3 - Transparent inline") {
       exercise("Polyvalent function", activated = true) {
-        check(defaultOf("String") + 5 == ??)
+        // This works because the compiler converts the output type of defaultOf into an Int
         check(defaultOf("Int") + 5 == ??)
+
+        // This works because the compiler converts the output type of defaultOf into an String
+        check(defaultOf("String") + 5 == ??)
+
+        // This works because the compiler converts the output type of defaultOf into an Boolean
         check(defaultOf("Boolean") || false == ??)
       }
     }
