@@ -53,7 +53,7 @@ object _01_simple_enum {
    */
 
   @main
-  def _01_Colors(): Unit =
+  def _20_01_Colors(): Unit =
     section("PART 1 - color enumeration") {
       println(s"Red: ${Color.RED}")
 
@@ -114,7 +114,7 @@ object _02_arithmetic_expression {
         case Add(l, r) => l(x) + r(x)
 
   @main
-  def _02_Arithmetic(): Unit =
+  def _20_02_Arithmetic(): Unit =
     section("PART 2 - arithmetic expression") {
       import Arithmetic.*
 
@@ -150,7 +150,7 @@ object _03_enum_with_constructor {
   }
 
   @main
-  def _03_Notes(): Unit =
+  def _20_03_Notes(): Unit =
     section("PART 3 - enum with constructor") {
       check(Note.A4.frequency == ??)
       check(Note.A4.time == ??)
@@ -185,7 +185,7 @@ object _04_adt {
   }
 
   @main
-  def _04_ADT_with_enum(): Unit =
+  def _20_04_ADT_with_enum(): Unit =
     section("PART 4 - GADT") {
       import PeutEtre.*
 

@@ -39,7 +39,7 @@ object _01_extension_method {
   )
 
   @main
-  def _01_order_extension(): Unit =
+  def _30_01_order_extension(): Unit =
     section("PART 1 - extension method on order") {
 
       /**
@@ -119,7 +119,7 @@ object _02_multi_extension {
   }
 
   @main
-  def _01_add_multi_extension(): Unit =
+  def _30_02_add_multi_extension(): Unit =
     section("Add multiple extension methods") {
       exercise("Multiple extension method", activated = true) {
         val l =

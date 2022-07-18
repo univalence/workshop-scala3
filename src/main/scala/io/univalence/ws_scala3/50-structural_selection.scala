@@ -22,7 +22,7 @@ object _01_structural_selection {
     }
 
   @main
-  def _01_sel(): Unit =
+  def _50_01_sel(): Unit =
     section("PART 1 - ???") {
       val line = "productId=banana,quantity=12,unitPrice=2.50"
 

@@ -23,7 +23,7 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  * So, this is an example with braces.
  */
 @main
-def _01_a_with_braces(): Unit = {
+def _10_01_a_with_braces(): Unit = {
   val hoursInDay  = 24.0
   val daysInWeek  = 7.0
   val hoursInWeek = hoursInDay * daysInWeek
@@ -33,7 +33,7 @@ def _01_a_with_braces(): Unit = {
 
 /** This is an example without braces. */
 @main
-def _01_b_without_braces(): Unit =
+def _10_01_b_without_braces(): Unit =
   val hoursInDay  = 24.0
   val daysInWeek  = 7.0
   val hoursInWeek = hoursInDay * daysInWeek
@@ -50,13 +50,13 @@ def _01_b_without_braces(): Unit =
  * function by hand.
  */
 @main
-def _01_c_with_markup(): Unit =
+def _10_01_c_with_markup(): Unit =
   val hoursInDay  = 24.0
   val daysInWeek  = 7.0
   val hoursInWeek = hoursInDay * daysInWeek
 
   println(s"There is $hoursInWeek hours in a week")
-end _01_c_with_markup
+end _10_01_c_with_markup
 
 /**
  * ==Confusion with indentation==
@@ -74,7 +74,7 @@ def plusOne(value: Int) =
   def plusTwo(value: Int) = value + 2
 
 @main
-def _02_indentation_confusion(): Unit =
+def _10_02_indentation_confusion(): Unit =
   section("Confusion with indentation") {
     exercise("Try to guess the value", activated = true) {
       // The expected value below might not be the one you was thinking of...
@@ -128,7 +128,7 @@ object MyObject:
   }
 
 @main
-def _03_syntax_conversion(): Unit =
+def _10_03_syntax_conversion(): Unit =
   section("Syntax conversion") {
     exercise("By changing the syntax of MyObject by hand, check that the result stay the same", activated = true) {
       check(MyObject.a == 42)

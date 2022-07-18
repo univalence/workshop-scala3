@@ -26,11 +26,11 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  *     `run` and select the item you are looking for in the menu.
  */
 @main
-def _01_main(): Unit = println("Hello world")
+def _01_01_main(): Unit = println("Hello world")
 
 /** You can add as many main function as you want in a single file. */
 @main
-def _02_main(): Unit = println("dlrow olleH")
+def _01_02_main(): Unit = println("dlrow olleH")
 
 /**
  * ===Notes===

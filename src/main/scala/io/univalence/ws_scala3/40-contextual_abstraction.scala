@@ -38,7 +38,7 @@ object _01_given {
   }
 
   @main
-  def _01_given_and_summon(): Unit =
+  def _40_01_given_and_summon(): Unit =
     section("PART 1 - given and summon to define and get contextual abstraction") {
       exercise("Combine 2 Ints", activated = true) {
 
@@ -81,9 +81,9 @@ object _02_using {
   }
 
   @main
-  def _01_using_in_function(): Unit =
-    section("PART 2 - ") {
-      exercise("using with named context parameter", activated = true) {
+  def _40_02_using_in_function(): Unit =
+    section("PART 2 - using") {
+      exercise("using with named contextual parameter", activated = true) {
 
         /**
          * The `using` keyword helps to declare a context parameter,
@@ -151,13 +151,13 @@ object _03_typeclass {
   def fold[A: Combinator](init: A)(l: List[A]): A = l.fold(init)(_.combine(_))
 
   @main
-  def _01_tc(): Unit =
+  def _40_03_tc(): Unit =
     section("PART 3 - Typeclass") {
       println(1.combine(2))
     }
 
   @main
-  def _02_tc(): Unit =
+  def _40_04_tc(): Unit =
     section("PART - Create your own typeclass instance") {
       exercise("???", activated = false) {
         given Combinator[String] with {
@@ -169,7 +169,7 @@ object _03_typeclass {
     }
 
   @main
-  def _03_tc(): Unit =
+  def _40_05_tc(): Unit =
     section("PART - ") {
       exercise("???", activated = false) {
 
@@ -212,7 +212,7 @@ object _04_implicit_conversion {
     def apply(int: Int): Rational = Rational(int, 1)
 
   @main
-  def _04_implicit(): Unit =
+  def _40_05_implicit(): Unit =
     section("PART 4 - Implicit conversion") {
       check(Rational(3, 1) * 2 == Rational(6, 1))
     }

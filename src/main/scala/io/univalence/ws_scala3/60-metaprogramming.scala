@@ -30,7 +30,7 @@ import io.univalence.ws_scala3.internal.exercise_tools._
  * can see its action, especially with inline if and inline recursion.
  */
 
-object _01_inlining {
+object _60_inlining {
 
   /**
    * ==Inline if==
@@ -50,7 +50,7 @@ object _01_inlining {
     else Sign.Negative
 
   @main
-  def _01_inline_condition(): Unit =
+  def _60_01_inline_condition(): Unit =
     section("PART 1 - inline if") {
       exercise("working example with inline if", activated = true) {
         check(signOf(0) == ??)
@@ -81,7 +81,7 @@ object _01_inlining {
     else value + sumUpTo(value - 1)
 
   @main
-  def _02_inline_recursion(): Unit =
+  def _60_02_inline_recursion(): Unit =
     section("PART 2 - inline recursion") {
       exercise("working example with inline recursion", activated = true) {
         check(sumUpTo(0) == ??)
@@ -129,7 +129,7 @@ object _02_transparent_inline {
     }
 
   @main
-  def _01_transparent_inline(): Unit =
+  def _60_03_transparent_inline(): Unit =
     section("PART 3 - Transparent inline") {
       exercise("Polyvalent function", activated = true) {
         check(defaultOf("String") + 5 == ??)
