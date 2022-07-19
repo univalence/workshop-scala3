@@ -8,12 +8,13 @@ experiences with Scala 2.
 
 In this workshop, we will focus on:
 
-* toplevel main function and block delimitation
-* enum type
-* extension method
-* contextual abstraction and typeclass
-* inline
+* Toplevel main function
+* Block delimitation
+* Enum type
+* Extension method
+* Contextual abstraction and typeclass
 * Selectable (structural types)
+* Metaprogramming with inline
 
 ## Exercises
 
