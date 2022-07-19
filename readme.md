@@ -3,6 +3,12 @@
 The workshop in this project aims for you to discover some specific
 features of Scala 3 language.
 
+You can the Github repo with
+
+```shell
+$ git clone https://github.com/univalence/workshop-scala3
+```
+
 In order to progress in this workshop, it is better to have some
 experiences with Scala 2.
 
