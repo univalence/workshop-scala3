@@ -26,14 +26,15 @@ import io.univalence.ws_scala3.internal.exercise_tools._
  * are here to replace the usual implicit def, implicit val and implicit
  * class.
  *
- * The implicits still exist but we should use the new words.
+ * The implicits still exist but we should use the new words because
+ * they may be deprecated in the future.
  *
  * ==given and summon: contextual instance==
  */
 object _01_given {
 
   /**
-   * Combine two elements of the same type.
+   * Combines two elements of the same type.
    *
    * This trait is like [[java.util.Comparator]] in Java. Combinator is
    * applicable a type `A`, on which you can call the method `combine`,
@@ -103,7 +104,10 @@ object _01_given {
    */
   given Combinator[String] = (lhs: String, rhs: String) => lhs + rhs
 
-  /** Note that you can give a name to an instance. */
+  /**
+   * Note that you can give a name to an instance. It still can be
+   * useful if you need several combinator for a same type.
+   */
   given boolCombinator: Combinator[Boolean] with {
     override def combine(lhs: Boolean, rhs: Boolean): Boolean = lhs || rhs
   }

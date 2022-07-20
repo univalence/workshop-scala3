@@ -22,8 +22,8 @@ import io.univalence.ws_scala3.internal.exercise_tools._
  * =Extension methods=
  * An '''extension method''' is a method that is added by a developer in
  * a specific scope to an existing type outside of this type
- * declaration. It is useful especially when you want to ad behavior to
- * class that you are not allowed to modify.
+ * declaration. It is useful especially when you want to add behaviors
+ * to class that you are not allowed to modify.
  *
  * Extension methods already existed in Scala 2, but you have to declare
  * an implicit class to add methods. In Scala 3, you benefit of a
@@ -33,7 +33,7 @@ object _01_extension_method {
 
   /**
    * We propose to represent client orders to a store. An order is
-   * composed of an proper ID, the store ID, and a list bought items.
+   * composed of a proper ID, the store ID, and a list of bought items.
    * Each item contains the ID of the product bought, its quantity, and
    * its unit price.
    *
