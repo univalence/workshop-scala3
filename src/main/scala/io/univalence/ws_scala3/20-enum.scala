@@ -21,7 +21,7 @@ import io.univalence.ws_scala3.internal.exercise_tools._
 /**
  * =Enum=
  * Scala 3 introduces a new construct to declare a enumeration, and even
- * an ADT or a GADT. In comes with capabilities almost unique in the
+ * an ADT or a GADT. It comes with capabilities almost unique in the
  * context of the JVM.
  *
  * In this file, you will see different usages of the `enum` construct
@@ -63,9 +63,9 @@ object _01_simple_enum {
     case RED, GREEN, BLUE
 
   /**
-   * Info: in reality, Scala enums is a syntaxic sugar that generate
-   * under the hood for our old Scala 2 way of describing enumeration
-   * with several helper functions.
+   * '''INFO''': in reality, Scala enums is a syntaxic sugar that
+   * generates our old Scala 2 way of describing enumeration with
+   * several helper functions under the hood for .
    */
 
   @main
@@ -74,7 +74,7 @@ object _01_simple_enum {
       println(s"Red: ${Color.RED}")
 
       /**
-       * Scala enums almost respect the Java contract (`values` returns
+       * Scala enums almost respects the Java contract (`values` returns
        * an array).
        */
       println(s"Colors: ${Color.values.mkString(", ")}")
@@ -225,12 +225,11 @@ object _04_adt {
   //  }
 
   sealed trait Cases
-  object Cases:
-    case object First extends Cases {
-      def doSomething(): Unit = println("Something")
-    }
-    case object Second extends Cases {
-      def doSomethingElse(): Unit = println("Something else")
-    }
 
+  object Cases:
+    case object First extends Cases:
+      def doSomething(): Unit = println("Something")
+    case object Second extends Cases:
+      def doSomethingElse(): Unit = println("Something else")
+  end Cases
 }

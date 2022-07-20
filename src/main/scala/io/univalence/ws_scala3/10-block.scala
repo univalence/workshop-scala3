@@ -28,7 +28,7 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  * not necessary anymore, if the function has many lines. So, it is up
  * to you to add or not those braces.
  *
- * In the case, you do not add braces, the compiler becomes
+ * In the case you do not add braces, the compiler becomes
  * indentation-sensitive — meaning that the indentation defines the
  * code-block. Python has the same functionality.
  *
@@ -171,6 +171,6 @@ def _10_03_syntax_conversion(): Unit =
  *
  * Note that Scala 3 proposes different compilation options to force the
  * adoption of a block style or another (`-new-syntax`, `-old-syntax`,
- * `-indent`, `-no=indent`). If necessary, the compiler can rewrite your
+ * `-indent`, `-no-indent`). If necessary, the compiler can rewrite your
  * blocks so they match the selected style.
  */
