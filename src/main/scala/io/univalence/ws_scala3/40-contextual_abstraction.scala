@@ -326,19 +326,18 @@ object _03_typeclass {
       }
     }
 
+  /**
+   * Show is a typeclass that adds the operation `show` to types
+   * in a view to get the String representation of their values.
+   */
+  trait Show[A] {
+    extension (a: A) def show: String
+  }
+
   @main
   def _40_06_show_typeclass(): Unit =
     section("PART 6 - Create your own typeclass") {
-      exercise("Try to solve this exercise by completing the typeclass Show below", activated = false) {
-
-        /**
-         * Show is a typeclass that adds the operation `show` to types
-         * in a view to get the String representation of their values.
-         */
-        trait Show[A] {
-          extension (a: A) def show: String
-        }
-
+      exercise("Try to solve this exercise by completing the typeclass Show above", activated = true) {
         // TODO Uncomment the lines below one by one and implement the necessary given instances.
 
 //        check(1.show == "1")
