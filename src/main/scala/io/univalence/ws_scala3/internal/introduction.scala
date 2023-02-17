@@ -46,7 +46,7 @@ object introduction {
        * the program output. You have also another parameter named
        * `activated`, that we will later.
        */
-      exercise("A first exercise", activated = true) {
+      exercise("An exercise OK", activated = true) {
         val a = 42
 
         /**
@@ -63,7 +63,7 @@ object introduction {
         check(a == 42)
       }
 
-      exercise("A second exercise", activated = true) {
+      exercise("An exercise to complete", activated = true) {
         val b = 24
 
         /**
@@ -71,9 +71,25 @@ object introduction {
          * fails the boolean expression. And so, you have to guess the
          * value!
          */
+        comment("What is the value of `b` here?")
         check(b == ??)
       }
 
+      exercise("An exercise with a missing implementation", activated = true) {
+        val c: Int = |>?
+
+        check(c * 2 == 6)
+      }
+
+//      exercise("An exercise ...", activated = true) {
+//        object d {
+//          val a = 3
+//        }
+//
+//        println(eval("1 + 1"))
+//        println(eval("d.a"))
+//        println(eval("d.b"))
+//      }
     }
 
     section("PART 2 - This a second part") {
@@ -89,9 +105,9 @@ object introduction {
        * set the `activated` parameter to `true` and solve the exercise.
        */
       exercise("Deactivated exercise", activated = false) {
-        val c: Int = ???
+        val a: Int = |>?
 
-        check(c * 2 == 6)
+        check(a * 2 == 6)
       }
 
       /**
@@ -105,9 +121,19 @@ object introduction {
        */
       exercise("Exercise with commented content", activated = false) {
         // TODO uncomment the lines below and solve the exercise.
-//        object d {}
+//        object b {}
 //
-//        check(d.a == 42)
+//        check(b.a == 42)
+      }
+
+      exercise("An exercise that fails", activated = false) {
+        val c: Int =
+          if (true)
+            throw new Exception()
+          else
+            1
+
+        check(c * 2 == 6)
       }
     }
   }
