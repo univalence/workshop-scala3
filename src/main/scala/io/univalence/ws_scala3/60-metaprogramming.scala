@@ -83,8 +83,9 @@ object _60_inlining {
       exercise("example that fails at compile-time", activated = false) {
         // TODO uncomment the line below and try to compile the file
 //        check(signOf("0".toInt) == Sign.Zero)
-        // You can compile the file simply trying to running it or by
-        // using `sbt compile` or `sbt run`.
+
+        // >>> You can compile the file simply trying to running it or
+        // >>> by using `sbt compile` or `sbt run`.
       }
 
       /**
@@ -93,11 +94,14 @@ object _60_inlining {
        */
       exercise("example that works with inline variable", activated = true) {
         inline val a = 42
+
+        comment("What is the sign of the inline variable a?")
         check(signOf(a) == ??)
       }
 
       exercise("example that fails at compile-time with normal variable", activated = false) {
         val a = 42
+        comment("What is the sign of the non-inline variable a?")
         // TODO uncomment this line and see what happens
 //        check(signOf(a) == ??)
       }
@@ -183,7 +187,7 @@ object _02_transparent_inline {
         check(defaultOf("String") + 5 == ??)
 
         // This works because the compiler converts the output type of defaultOf into an Boolean
-        check(defaultOf("Boolean") || false == ??)
+        check((defaultOf("Boolean") || false) == ??)
       }
     }
 }

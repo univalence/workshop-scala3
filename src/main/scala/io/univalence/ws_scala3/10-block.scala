@@ -24,17 +24,16 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  * first focus on function body, before taking a look the other
  * constructs.
  *
- * In terms of new syntax, for exemple, braces for the function body are
- * not necessary anymore, if the function has many lines. So, it is up
- * to you to add or not those braces.
+ * In terms of new syntax, for exemple, curly braces for the function
+ * body are not necessary anymore, if the function has many lines. So,
+ * it is up to you to add or not those braces.
  *
  * In the case you do not add braces, the compiler becomes
  * indentation-sensitive — meaning that the indentation defines the
  * code-block. Python has the same functionality.
  *
- * You can also put an end marker to a function (like with Ruby) or use
- * braces back again. If you stay consistent in terms of code-block
- * delimitation, you can mix the different syntaxes.
+ * You can also put an end marker to a function (like Ruby) or use
+ * braces back again.
  *
  * So, this is an example with braces.
  */
@@ -93,8 +92,8 @@ def plusOne(value: Int) =
 def _10_02_indentation_confusion(): Unit =
   section("Confusion with indentation") {
     exercise("Try to guess the value", activated = true) {
-      // The expected value below might not be the one you was thinking of...
-      // But why? Try to fix the code above.
+      comment("The expected value below might not be the one you was thinking of...")
+      comment("But why? Try to fix the code above.")
       check(plusOne(10) == ??)
     }
   }
@@ -110,6 +109,9 @@ def _10_02_indentation_confusion(): Unit =
  *
  * TODO Below, convert [[MyObject]] and its content so it match the
  * Scala 2 syntax.
+ *
+ * You can run [[_10_03_syntax_conversion]] below to ensure that
+ * everything is OK.
  */
 
 // Guess what, this is the Python-like syntax for object. You have the
@@ -147,15 +149,19 @@ object MyObject:
 def _10_03_syntax_conversion(): Unit =
   section("Syntax conversion") {
     exercise("By changing the syntax of MyObject by hand, check that the result stay the same", activated = true) {
+      comment("check value of a")
       check(MyObject.a == 42)
 
+      comment("check signOf function")
       check(MyObject.signOf(42) == 1)
       check(MyObject.signOf(-42) == -1)
       check(MyObject.signOf(0) == 0)
 
+      comment("check addOptions function")
       check(MyObject.addOptions(Some(1), None).isEmpty)
       check(MyObject.addOptions(Some(1), Some(2)).contains(3))
 
+      comment("check roleOf function")
       check(MyObject.roleOf("Jon") == "Product owner")
       check(MyObject.roleOf("Jessie") == "Developer")
       check(MyObject.roleOf("David") == "unknown")
@@ -163,6 +169,7 @@ def _10_03_syntax_conversion(): Unit =
   }
 
 /**
+ * ===Note===
  * What we have seen with code-block delimitation is also applicable for
  * many constructions: class, case class, trait, variable declaration...
  *

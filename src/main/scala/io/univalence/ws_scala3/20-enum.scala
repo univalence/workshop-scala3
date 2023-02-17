@@ -21,8 +21,8 @@ import io.univalence.ws_scala3.internal.exercise_tools._
 /**
  * =Enum=
  * Scala 3 introduces a new construct to declare a enumeration, and even
- * an ADT or a GADT. It comes with capabilities almost unique in the
- * context of the JVM.
+ * an ADT, parameterized ADT, or a GADT. It comes with capabilities
+ * almost unique in the context of the JVM.
  *
  * In this file, you will see different usages of the `enum` construct
  * in Scala 3, from the one that mimics Java approach to the complete
@@ -74,8 +74,8 @@ object _01_simple_enum {
       println(s"Red: ${Color.RED}")
 
       /**
-       * Scala enums almost respects the Java contract (`values` returns
-       * an array).
+       * Scala enums almost respects the Java contract (eg. `values`
+       * returns an array).
        */
       println(s"Colors: ${Color.values.mkString(", ")}")
       println(s"Color value of BLUE: ${Color.valueOf("BLUE")}")
@@ -89,9 +89,13 @@ object _01_simple_enum {
        * Note: if you run this program and take a look at the output,
        * you will easily answer those checks ;)
        */
+      comment("What is the list of available colors?")
       check(Color.values.mkString(", ") == ??)
+      comment("What is the string value of the color BLUE?")
       check(Color.valueOf("BLUE") == ??)
+      comment("What is the color at position 1 in the enum type?")
       check(Color.fromOrdinal(1) == ??)
+      comment("What is the position of the color RED in its enum type?")
       check(Color.RED.ordinal == ??)
     }
 
@@ -123,6 +127,12 @@ object _02_arithmetic_expression {
 
     def +(other: Arithmetic): Add = Add(this, other)
 
+    def show: String =
+      this match
+        case Var       => "X"
+        case Const(v)  => v.toString
+        case Add(l, r) => l.show + " + " + r.show
+
     def apply(x: Int): Int =
       this match
         case Var       => x
@@ -135,6 +145,8 @@ object _02_arithmetic_expression {
       import Arithmetic.*
 
       val f = Var + Var + Const(10)
+
+      comment(s"What is the value of the expression '${f.show}' for ${Var.show} = 20?")
       check(f(20) == ??)
     }
 }
@@ -168,9 +180,13 @@ object _03_enum_with_constructor {
   @main
   def _20_03_Notes(): Unit =
     section("PART 3 - enum with constructor") {
+      comment("What is the frequency of the note A4?")
       check(Note.A4.frequency == ??)
+      comment("What is the time period of the note A4?")
       check(Note.A4.time == ??)
+      comment("What is the frequency of the note (A5) of 1 octave above A4?")
       check(Note.A4.octave(5) == ??)
+      comment("What is the frequency of the note (A3) of 1 octaves below A4?")
       check(Note.A4.octave(3) == ??)
     }
 }

@@ -16,7 +16,8 @@
  */
 package io.univalence.ws_scala3
 
-import io.univalence.ws_scala3.internal.exercise_tools._
+import io.univalence.ws_scala3.internal.{Database, Table}
+import io.univalence.ws_scala3.internal.exercise_tools.*
 
 /**
  * =Structural selection=
@@ -66,19 +67,28 @@ object _01_structural_selection {
   def _50_01_sel(): Unit =
     section("PART 1 - selectDynamic") {
       exercise("First approach", activated = true) {
-        val orderItem = Data(
-          "productId" -> "banana",
-          "quantity"  -> 12,
-          "unitPrice" -> 2.5
-        ).asInstanceOf[OrderItem]
+        val orderItem =
+          Data(
+            "productId" -> "banana",
+            "quantity"  -> 12,
+            "unitPrice" -> 2.5
+          ).asInstanceOf[OrderItem]
 
         println(s"order item: $orderItem")
 
+        comment("What is the ordered quantity (direct dot access)?")
         check(orderItem.quantity == ??)
+        comment("What is the ordered product ID (dynamic string access)?")
         check(orderItem.selectDynamic("productId") == ??)
       }
 
-      exercise("Read data from CSV", activated = true) {
+      exercise("Read and store data from CSV", activated = true) {
+        // we create a table and a repository to store ordered items
+        val database       = Database.connectLocal
+        val orderItemTable = database.getOrCreateTable[OrderItem]("order-item")
+        val repository     = new OrderItemRepository(orderItemTable)
+
+        // Here are the CSV data (they might have come from a file)
         val data =
           """productId,quantity,unitPrice
             |banana,12,2.5
@@ -86,31 +96,64 @@ object _01_structural_selection {
             |coffee,10,1.6
             |""".stripMargin
 
+        // convert the CSV data into list of rows
+        // each row if a Map of field name and its value in the row
         val rows = readCSVDataWithHeaders(data)
 
-        val items =
-          rows.map(fields =>
+        // convert the rows into OrderItem and store them
+        rows
+          .map(fields =>
             Data(
               "productId" -> fields("productId"),
               "quantity"  -> fields("quantity").toInt,
               "unitPrice" -> fields("unitPrice").toDouble
             ).asInstanceOf[OrderItem]
           )
+          .foreach(item => repository.save(item))
 
-        check(items(0).quantity == ??)
-        check(items(1).quantity == ??)
-        check(items.map(item => item.quantity * item.unitPrice).sum == ??)
+        comment("How many bananas have been ordered?")
+        check(repository.findByProductId("banana").map(_.quantity) == ??)
+        comment("How many coffe units have been ordered?")
+        check(repository.findByProductId("coffee").map(_.quantity) == ??)
+        comment("What is the total price of the stored ordered items?")
+        check(repository.findAll().map(item => item.quantity * item.unitPrice).sum == ??)
       }
     }
 
   def readCSVDataWithHeaders(csv: String): List[Map[String, String]] = {
-    val lines   = csv.split("\n").toList.map(_.trim)
-    val headers = lines.head.split(",").toList.map(_.trim)
+    def getLines(content: String): List[String] =
+      content
+        .split("\n")
+        .toList
+        .map(_.trim)
+
+    def getValues(line: String): List[String] =
+      line
+        .split(",")
+        .toList
+        .map(_.trim)
+
+    val lines   = getLines(csv)
+    val headers = getValues(lines.head)
 
     for {
       line <- lines.tail
       if line.nonEmpty
-    } yield headers.zipAll(line.split(",").toList.map(_.trim), "", "").toMap
+    } yield {
+      val values = getValues(line)
+
+      headers
+        .zipAll(values, "", "")
+        .toMap
+    }
+  }
+
+  class OrderItemRepository(table: Table[OrderItem]) {
+    def save(orderItem: OrderItem): Unit = table.put(orderItem.productId, orderItem)
+
+    def findByProductId(productId: String): Option[OrderItem] = table.safeGet(productId)
+
+    def findAll(): Iterator[OrderItem] = table.getAll.map(_._2)
   }
 
 }

@@ -149,7 +149,7 @@ object _01_given {
         check(summon[Combinator[List[Int]]].combine(List(1, 2), List(3, 4)) == ??)
       }
 
-      exercise("Combine 2 Strings", activated = false) {
+      exercise("Combine 2 Strings", activated = true) {
         val v1 = "Hello"
         val v2 = "World"
 
@@ -157,7 +157,7 @@ object _01_given {
          * Use summon here to get the right instance of Combinator to
          * combine v1 and v2.
          */
-        val result: String = ???
+        val result: String = |>?
 
         check(result == "HelloWorld")
       }
@@ -307,7 +307,7 @@ object _03_typeclass {
       exercise("Give an implementation for the instance below", activated = false) {
 
         given Combinator[String] with {
-          extension (lhs: String) override def combine(rhs: String): String = ???
+          extension (lhs: String) override def combine(rhs: String): String = |>?
         }
 
         check(fold("")(List("Hello", "World")) == "HelloWorld")
@@ -315,7 +315,7 @@ object _03_typeclass {
     }
 
   given [A]: Combinator[List[A]] with {
-    extension (lhs: List[A]) override def combine(rhs: List[A]): List[A] = ???
+    extension (lhs: List[A]) override def combine(rhs: List[A]): List[A] = |>?
   }
 
   @main
