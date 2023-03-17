@@ -16,26 +16,27 @@
  */
 package io.univalence.ws_scala3
 
-import io.univalence.ws_scala3.internal.exercise_tools._
+import io.univalence.ws_scala3.internal.exercise_tools.*
 
 /**
  * =Metaprogramming=
  *
- * Metaprogramming is the ability to execute your code to manipulate
- * your code. In Scala, this can be done at compile-time or at runtime
- * (reflection).
+ * Metaprogramming is the ability to execute a code that manipulates
+ * another code. In Scala, this can be done at compile-time or at
+ * runtime (reflection).
  *
  * For compile-time operation, you can use:
  *   - inlining
- *   - compile-time operation
  *   - macro
+ *   - other compile-time operations
  *
  * ==Inlining==
- * Here we will see inlining. It is represented by the keyword `inline`
- * and it gives you the power of macros without using macros! The
- * principle of inlining is to replace a call-site by its computed value
- * at compile-time. This gives you access to code optimization, in
- * addition to the one provided by the JIT.
+ * Here, we will see inlining. It is represented by the keyword `inline`
+ * and it gives you the power of macros without using macros!
+ *
+ * The principle of inlining is to replace a call-site by its computed
+ * value at compile-time. This gives you access to additional code
+ * optimization, in addition to the one provided by the JIT.
  *
  * You can inline functions, variables, parameters, match-structures,
  * and if-structures.
@@ -81,10 +82,10 @@ object _60_inlining {
       }
 
       exercise("example that fails at compile-time", activated = false) {
-        // TODO uncomment the line below and try to compile the file
+        // TODO activate the exercise, uncomment the line below and try to compile the file
 //        check(signOf("0".toInt) == Sign.Zero)
 
-        // >>> You can compile the file simply trying to running it or
+        // >>> You can compile the file simply by trying to run it or
         // >>> by using `sbt compile` or `sbt run`.
       }
 
@@ -102,7 +103,7 @@ object _60_inlining {
       exercise("example that fails at compile-time with normal variable", activated = false) {
         val a = 42
         comment("What is the sign of the non-inline variable a?")
-        // TODO uncomment this line and see what happens
+        // TODO activate the exercise, uncomment this line and see what happens
 //        check(signOf(a) == ??)
       }
     }

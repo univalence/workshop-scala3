@@ -254,8 +254,6 @@ object exercise_tools {
     println(("\t" * activatedContexts.size) + s">>> ${Console.BOLD}${result.expression}${Console.RESET} $resultDisplay")
   }
 
-  def eval[A](script: String): A = com.eed3si9n.eval.Eval[A](script)
-
   private def captureFileContext[A](content: Expr[A])(using Quotes): Expr[FileContext] = {
     import quotes.reflect
     import quotes.reflect.*

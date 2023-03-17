@@ -80,16 +80,6 @@ object introduction {
 
         check(c * 2 == 6)
       }
-
-//      exercise("An exercise ...", activated = true) {
-//        object d {
-//          val a = 3
-//        }
-//
-//        println(eval("1 + 1"))
-//        println(eval("d.a"))
-//        println(eval("d.b"))
-//      }
     }
 
     section("PART 2 - This a second part") {

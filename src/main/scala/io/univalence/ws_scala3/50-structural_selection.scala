@@ -26,9 +26,9 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  * developers who use to manipulate data.
  *
  * Structural selection is represented by the trait [[Selectable]]. For
- * example, it allows you to access a field of an instance by using the
- * dot accessor (eg. `anObject.a_field`) or by using index accessor like
- * a [[Map]] (ie. `anObject("a_field")`).
+ * example, it allows you to access the same field of an instance by
+ * using the dot accessor (eg. `anObject.a_field`) or by using index
+ * accessor, like a [[Map]] (ie. `anObject("a_field")`).
  *
  * This is done by implementing the trait [[Selectable]] and defining
  * the method `selectDynamic(name: String): Any`.
@@ -46,7 +46,7 @@ object _01_structural_selection {
     /** `elems` is converted into a [[Map]]. */
     private val fields = elems.toMap
 
-    /** This where the magic happens! */
+    /** This is where the magic happens! */
     def selectDynamic(fieldName: String): Any = fields(fieldName)
 
     override def toString: String = elems.map((f, v) => s"$f=$v").mkString("{ ", ", ", " }")
@@ -72,7 +72,7 @@ object _01_structural_selection {
             "productId" -> "banana",
             "quantity"  -> 12,
             "unitPrice" -> 2.5
-          ).asInstanceOf[OrderItem]
+          ).asInstanceOf[OrderItem] // See! No explicit mapping, here.
 
         println(s"order item: $orderItem")
 
@@ -96,11 +96,11 @@ object _01_structural_selection {
             |coffee,10,1.6
             |""".stripMargin
 
-        // convert the CSV data into list of rows
-        // each row if a Map of field name and its value in the row
-        val rows = readCSVDataWithHeaders(data)
+        // convert the CSV data into a list of rows
+        // each row is a Map of field names and their values
+        val rows: List[Map[String, String]] = readCSVDataWithHeaders(data)
 
-        // convert the rows into OrderItem and store them
+        // convert the rows into OrderItem and store them in the database
         rows
           .map(fields =>
             Data(
