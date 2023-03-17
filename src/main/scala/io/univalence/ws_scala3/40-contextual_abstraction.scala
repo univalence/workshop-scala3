@@ -16,33 +16,44 @@
  */
 package io.univalence.ws_scala3
 
-import io.univalence.ws_scala3.internal.exercise_tools._
+import io.univalence.ws_scala3.internal.exercise_tools.*
 
 /**
  * =Contextual abstraction=
  *
  * The Scala 2 implicits era is gone. All the implicits use cases has
- * been rethought and new words like summon, using, extension or given
- * are here to replace the usual implicit def, implicit val and implicit
- * class.
+ * been rethought and new keywords like `summon`, `using`, `extension`,
+ * or `given` are here to replace the usual `implicit def`, `implicit
+ * val`, `implicit class`, and `implicitly`.
  *
- * The implicits still exist but we should use the new words because
- * they may be deprecated in the future.
+ * The implicits still exist but you should use the new words only, as
+ * they may be deprecated in a future Scala release.
  *
  * ==given and summon: contextual instance==
+ *
+ * In this first exercise, we want to combine together elements of the
+ * same type. They could be integers, strings, ordered products,
+ * temperatures all over the year, etc. Those data can be combined in a
+ * view to compute a sum, a concatenation, a total price, an average
+ * temperature.
+ *
+ * Let's start by defining an interface, named `Combinable`, that those
+ * types could share.
  */
 object _01_given {
 
   /**
-   * Combines two elements of the same type.
+   * Combinable is an interface, which instances can Combine two
+   * elements of the same type.
    *
-   * This trait is like [[java.util.Comparator]] in Java. Combinator is
-   * applicable a type `A`, on which you can call the method `combine`,
-   * the same way you `Comparator` is applicable to a type A, on which
-   * you can call the method `compare`.
+   * This trait is similar to [[java.util.Comparator]] in Java, which
+   * aims to compare two elements of the same type: here, `Combinator`
+   * is applicable to a type `A`, on which you can call the method
+   * `combine`, the same way `Comparator` is applicable to a type A, on
+   * which you can call the method `compare`.
    *
-   * For example, `Combinator` can be applied to the type `Int`. In this
-   * case, the `combine` would add two values of the type `Int`.
+   * As an example, `Combinator` can be applied to the type `Int`. In
+   * this case, the `combine` would add two values of the type `Int`.
    *
    * From a mathematical point of view, `Combinator` is in a sense a
    * ''[[https://en.wikipedia.org/wiki/Semigroup semigroup]]''.
@@ -51,14 +62,25 @@ object _01_given {
    *   type on which Combinator can be applied.
    */
   trait Combinator[A] {
+
+    /**
+     * Combine two values together.
+     *
+     * @param lhs
+     *   first value to combine.
+     * @param rhs
+     *   second value to combine.
+     * @return
+     *   the result of combining the parameter values.
+     */
     def combine(lhs: A, rhs: A): A
   }
 
   /**
-   * As it happens, we will create an instance of [[Combinator]] for the
-   * type `Int`. As a usual developer, you will create an instance by
-   * declaring a variable and using the keyword `new`, or by declaring
-   * an ''object'':
+   * Now, we will create an instance of [[Combinator]] for the type
+   * `Int`. As a usual developer, you can create an instance by
+   * declaring a variable and using the keyword `new`, or you can even
+   * declare an ''object'':
    *
    * {{{
    *   val IntCombinator: Combinator[Int] = new Combinator[Int] { ... }
@@ -86,7 +108,8 @@ object _01_given {
    * for other kind of use cases in Scala 2 (extension methods, implicit
    * conversion, context bound...), so it might lead to confusion if you
    * are a beginner to Scala, 2/ in fact, there is no need to put a name
-   * to the implicit instances, as this name used to be avoided.
+   * to the implicit instances, as this name is not quite used after its
+   * declaration.
    *
    * Scala 3 comes with a specific keyword, named `given`, to declare
    * implicit instances for the use case of contextual abstraction.
@@ -129,21 +152,25 @@ object _01_given {
 
         /**
          * As our instances of Combinator are anonymous, we cannot get
-         * them by their names, as we used to do when we have defined a
-         * variable. Here, we will rather use `summon`.
+         * them by their names. So, we have to use a function that find
+         * in the current scope a "given" instance, which type matches
+         * the one in the parameter of the function call. Here, we will
+         * rather use `summon`.
          *
-         * Info: in Scala 2, it was named `implicitly`.
+         * Note: in Scala 2, it was named `implicitly`.
          */
         check(summon[Combinator[Int]].combine(1, 2) == ??)
       }
 
       exercise("Combine 2 Booleans", activated = true) {
+        comment("What is the result of combining true and false?")
 
-        /** We can style use a name if we want to. */
+        /** We can still use a name if we want to. */
         check(boolCombinator.combine(true, false) == ??)
       }
 
       exercise("Combine 2 Lists of Ints", activated = true) {
+        comment("What is the result of combining 2 lists?")
 
         /** With a generic instance... */
         check(summon[Combinator[List[Int]]].combine(List(1, 2), List(3, 4)) == ??)
@@ -159,6 +186,7 @@ object _01_given {
          */
         val result: String = |>?
 
+        comment("Here is the result of combining 2 strings")
         check(result == "HelloWorld")
       }
     }
@@ -191,25 +219,39 @@ object _02_using {
       exercise("using with named contextual parameter", activated = true) {
 
         /**
+         * To make the things a little bit more complicated, we add
+         * another `given` declaration in this specific scope. So, the
+         * declaration below replace the default declaration seen above
+         * for the type `Combinator[Int]`.
+         */
+        given Combinator[Int] with {
+          override def combine(lhs: Int, rhs: Int): Int = lhs * rhs
+        }
+
+        /**
          * The `using` keyword helps to declare a contextual parameter
          * in a function, meaning a parameter, whose value may be
          * captured from the current or the outside scope.
          */
         def fold[A](init: A)(l: List[A])(using combinator: Combinator[A]): A = l.fold(init)(combinator.combine)
 
-        /**
-         * You can explicitly indicate the contextual parameter. In this
-         * case, you must precede it with `using`.
-         */
-        check(fold(0)(List(1, 2, 3))(using intCombinator) == ??)
+        comment("What is the result of aggregating integers in a list?")
 
         /**
-         * If you do not write the contextual parameter, Scala will look
-         * up for an instance in the current and outside scope, that
-         * satisfies the contextual parameter type at the call-site of
-         * the function.
+         * If you do not indicate the contextual parameter, Scala will
+         * look up for an instance in the current scope and then in the
+         * outside scopes, that satisfies the contextual parameter type
+         * at the call-site of the function.
          */
-        check(fold(0)(List(1, 2, 3)) == ??)
+        check(fold(1)(List(1, 2, 3, 4)) == ??)
+
+        comment("What is the result of aggregating integers in a list (bis)?")
+
+        /**
+         * You can explicitly indicate the contextual parameter. In this
+         * case, you must precede the parameter with `using`.
+         */
+        check(fold(0)(List(1, 2, 3, 4))(using intCombinator) == ??)
 
         /**
          * When you explicitly provide a contextual parameter, you have
@@ -217,10 +259,14 @@ object _02_using {
          *
          * The line below produces a compilation error.
          */
-        // fold(0)(List(1, 2, 3))(intCombinator)
+        // fold(0)(List(1, 2, 3, 4))(intCombinator)
       }
 
       exercise("using with anonymous contextual parameter", activated = true) {
+
+        given Combinator[Int] with {
+          override def combine(lhs: Int, rhs: Int): Int = lhs * rhs
+        }
 
         /**
          * You don't have to specify a name for your contextual
@@ -230,7 +276,10 @@ object _02_using {
          */
         def fold[A](init: A)(l: List[A])(using Combinator[A]): A = l.fold(init)(summon[Combinator[A]].combine)
 
+        comment("What is the result of aggregating integers in a list?")
         check(fold(0)(List(1, 2, 4))(using intCombinator) == ??)
+
+        comment("What is the result of aggregating integers in a list (bis)?")
         check(fold(0)(List(1, 2, 4)) == ??)
       }
 
@@ -242,6 +291,7 @@ object _02_using {
          */
         def fold[A: Combinator](init: A)(l: List[A]): A = l.fold(init)(summon[Combinator[A]].combine)
 
+        comment("What is the result of aggregating integers in a list?")
         check(fold(0)(List(1, 2, 5)) == ??)
       }
     }
@@ -254,18 +304,18 @@ object _02_using {
  * comfortable.
  *
  * But, you might not know what a typeclass is? A typeclass is a way to
- * categorize an existing type and to add new behavior on that type.
+ * categorize an existing type in a specific context (or scope) and to
+ * add new behavior on that type.
  *
- * The `Combinator` and `Comparator` are (in a sense) examples of
+ * The `Combinator` and `Comparator` types are (in a sense) examples of
  * typeclasses. Indeed, in a global point of view of your code, with a
- * `Comparator`, you categorize a type as being comparable and with the
- * method `compare`, you add a new behavior to the categorized type, in
- * giving the possibility to compare its elements.
+ * `Comparator`, you categorize a type as being comparable in a given
+ * context and with the method `compare`, you add a new behavior to the
+ * categorized type, enabling the possibility to compare its elements.
  *
  * The same goes for the `Combinator` type. But to make the typeclass
  * feature more usable while writing your code, in Scala 2, you would
- * use some tricky idioms, far from being accessible to every
- * developers.
+ * use some tricky idioms, far from being accessible to any developers.
  *
  * Below, we will see the way you declare a typeclass in Scala 3, with
  * the help of contextual instances, contextual parameters, and
@@ -275,8 +325,9 @@ object _03_typeclass {
 
   /**
    * Let's start again with the Combinator type. But this time, we want
-   * that each combinable type gains the method `combine` (ie. you can
-   * write `a.combine(b)` for every `a` and `b` of type `A`).
+   * that each combinable type gains the method `combine`, with the help
+   * of extension methods (ie. so, you can write `a.combine(b)` for
+   * every `a` and `b` of type `A`).
    */
   trait Combinator[A] {
     extension (lhs: A) def combine(rhs: A): A
@@ -290,45 +341,46 @@ object _03_typeclass {
     extension (lhs: Int) override def combine(rhs: Int): Int = lhs + rhs
   }
 
-  /**
-   * This is an example of function, that uses the typeclass Combinator.
-   */
-  def fold[A: Combinator](init: A)(l: List[A]): A = l.fold(init)(_.combine(_))
-
   @main
   def _40_03_combinator_typeclass_for_int(): Unit =
     section("PART 3 - Combinator typeclass for Int") {
       println(1.combine(2))
     }
 
+  given Combinator[String] with {
+    // TODO complete the implementation
+    extension (lhs: String) override def combine(rhs: String): String = |>?
+  }
+
+  /**
+   * This is an example of function, that uses the typeclass Combinator.
+   */
+  def fold[A: Combinator](init: A)(l: List[A]): A = l.fold(init)(_.combine(_))
+
   @main
   def _40_04_combinator_typeclass_for_string(): Unit =
     section("PART 4 - Create your own typeclass instance") {
-      exercise("Give an implementation for the instance below", activated = false) {
-
-        given Combinator[String] with {
-          extension (lhs: String) override def combine(rhs: String): String = |>?
-        }
-
+      exercise("Give an implementation for the instance below", activated = true) {
         check(fold("")(List("Hello", "World")) == "HelloWorld")
       }
     }
 
   given [A]: Combinator[List[A]] with {
+    // TODO complete the implementation
     extension (lhs: List[A]) override def combine(rhs: List[A]): List[A] = |>?
   }
 
   @main
   def _40_05_combinator_typeclass_for_list(): Unit =
     section("PART 5 - Create your own typeclass instance (bis)") {
-      exercise("Give an implementation for the instance below", activated = false) {
+      exercise("Give an implementation for the instance below", activated = true) {
         check(fold(List.empty[Int])(List(List(1, 2), List(3, 4), List(5, 6))) == List(1, 2, 3, 4, 5, 6))
       }
     }
 
   /**
-   * Show is a typeclass that adds the operation `show` to types
-   * in a view to get the String representation of their values.
+   * Show is a typeclass that adds the operation `show` to types in a
+   * view to get the String representation of their values.
    */
   trait Show[A] {
     extension (a: A) def show: String
@@ -379,6 +431,7 @@ object _04_implicit_conversion {
   @main
   def _40_07_implicit_conversion(): Unit =
     section("PART 7 - Implicit conversion") {
-      check(Rational(3, 1) * 2 == Rational(6, 1))
+      comment("What is the result of 3/2 * 2")
+      check(Rational(3, 7) * 2 == ??)
     }
 }
