@@ -16,7 +16,7 @@
  */
 package io.univalence.ws_scala3.internal
 
-import io.univalence.ws_scala3.internal.exercise_tools._
+import io.univalence.ws_scala3.internal.exercise_tools.*
 
 /**
  * =Introduction=
@@ -76,6 +76,11 @@ object introduction {
       }
 
       exercise("An exercise with a missing implementation", activated = true) {
+        /**
+         * Here the implementation of the `c` variable is missing,
+         * as the operator `|>?` suggest. Fix it by giving the right
+         * value to `c`.
+         */
         val c: Int = |>?
 
         check(c * 2 == 6)

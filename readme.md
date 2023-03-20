@@ -9,9 +9,6 @@ You can the Github repo with
 $ git clone https://github.com/univalence/workshop-scala3
 ```
 
-In order to progress in this workshop, it is better to have some
-experiences with Scala 2.
-
 In this workshop, we will focus on:
 
 * Toplevel main function
@@ -42,10 +39,31 @@ The macros defined are:
 * `section` blocks (a group of exercises) with a title
 * `exercise` blocks with a title and an activation flag
 * `check` that contains a boolean expression and check it
-* `??` or `???` explicit placeholders for your answer
+* `!?` explicit placeholders for a type definition to complete
+* `??` or `???` or `|>?` explicit placeholders for a missing implementation
 
 If an exercise is not activated, you can turn its flag to `true`, once
 you want to solve it.
+
+## How to run
+
+### Intellij
+
+- Open the file you want to run (e.g `00-introduction.scala`)
+
+- Near to the method with `@main` annotation, click on the green arrow to run the `main` method
+
+- The output will be displayed in the `console`
+
+### VS Code
+
+- launch the terminal: `$> sbt`
+
+- execute the project: `$> run`
+
+- The following message `Multiple main classes detected. Select one to run:` will be printed. Choose the number of the main method you want to run (e.g: `1`).
+
+- The output will be displayed in the `console`
 
 ## Topics not seen in this workshop
 
