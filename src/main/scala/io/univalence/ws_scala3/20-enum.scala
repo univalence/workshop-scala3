@@ -288,6 +288,9 @@ object _05_gadt {
    * This is our Engine supertype that modelize a distributed Map/Reduce
    * computation. Note that we have a generic `A` for the value returned
    * by the computation.
+   * For simplicity, we will consider for our example that our Map/Reduce
+   * engine will only do computations list of strings (i.e. computations
+   * will only be on string).
    */
   enum Computation[A] {
     /**
@@ -295,17 +298,18 @@ object _05_gadt {
      * of data for a distributed computation. It will be wise to splice the data
      * into mutltiple blocks to avoid to exceed computer memory.
      * 
-     * Note that in the case of `Block`, the return type will be a `List`. With
-     * a GADT, when defining a subtype we can have a more specific type.
+     * Note that in the case of `Block`, as a list of strings has be loaded the
+     * return type will be `List[String]`. With a GADT, when defining a subtype,
+     * it can extends with a more specific type.
      */
-    case Block[B](value: List[B]) extends Computation[List[B]]
+    case Block(value: List[String]) extends Computation[List[String]]
 
     /**
-     * This a `Map` operation on a computation `arg` on which we want the
+     * This a `Map` operation on a computation (`arg`) on which we want the
      * function `fun` to be applied to the result of that computation. Note
      * that the function could change the return type of the computation from
-     * a type `C` (of the initial computation) to a type `D` (the new result
-     * type). 
+     * a type `C` (type of the initial computation) to a type `D` (type of the
+     * mapping result).
      * 
      * The type `C` will be unknown outside of `Map` (i.e. if we have
      * a value of type `Map` we can't retrieve the type of `C`). This is 
@@ -314,9 +318,9 @@ object _05_gadt {
     case Map[C, D](arg: Computation[C], fun: C => D) extends Computation[D]
 
     /**
-     * This is a `Reduce` operation on two computations to combine the results
-     * of the 2 computations into a single value. To combine the computed 
-     * values we will use the given function `fun`.
+     * This is a `Reduce` operation on two computations, i.e. we want to
+     * combine the results of the 2 computations into a single value. To 
+     * combine the computed values we will use the given function `fun`.
      */
     case Reduce[X](arg1: Computation[X], arg2: Computation[X], fun: (X, X) => X)
         extends Computation[X]
@@ -327,7 +331,7 @@ object _05_gadt {
      * This method evaluate a computation by handling the different cases
      * (Map / Reduce / Block). This function will return a result of the type
      * `A` (the generic of `Computation`). The result type will change according
-     * to the case we are handling.
+     * to the case we are handling in our pattern-matching.
      */
     def eval[A](computation: Computation[A]): A = computation match {
       /**
@@ -335,7 +339,7 @@ object _05_gadt {
        * will be of type `List[A]`. The compiler will be able to deduce that
        * in this case `A == List`.
        */
-      case Block(value)            => value
+      case Block(value)            => value: List[String] // we assert that the result is of type `List[String]`
 
       /**
        * When having a `Map`, we extract the attributes (the computation and
@@ -346,14 +350,14 @@ object _05_gadt {
        *   is to pass it to the mapping function.
        * - the return type is the return type of the mapping function (`A`)
        */
-      case Map(arg, fun)           => fun(eval(arg))
+      case Map(arg, fun)           => fun(eval(arg)): A // we assert that the result is of type `A`
 
       /**
        * When having a reduce, we extract the attributes (the 2 computations
        * and the combining function). Then we eval the computations and we
        * pass the results to the combining function. The result will be of type `A`.
        */
-      case Reduce(arg1, arg2, fun) => fun(eval(arg1), eval(arg2))
+      case Reduce(arg1, arg2, fun) => fun(eval(arg1), eval(arg2)): A // we assert that the result is of type `A`
     }
   }
 
@@ -367,14 +371,14 @@ object _05_gadt {
         /**
          * This is our 1st Map/Reduce program.
          * 
-         * We have a list of integers that we want to split in 2 blocks,
+         * We have a list of strings that we want to split in 2 blocks,
          * reverse each block and concat the blocks to get original list in
          * the reverse order. We use `reverse` in the mapping function to
          * reverse a list and `concat` method (on List) to merge 2 lists.
          */
-        val reversed: Computation[List[Int]] = Reduce(
-          Map(Block(List(1, 2, 3)), x => x.reverse),
-          Map(Block(List(4, 5, 6)), x => x.reverse),
+        val reversed: Computation[List[String]] = Reduce(
+          Map(Block(List("Hello", "my", "friend")), x => x.reverse),
+          Map(Block(List("Nice", "seeing", "you")), x => x.reverse),
           (a, b) => b.concat(a)
         )
   
@@ -384,24 +388,30 @@ object _05_gadt {
 
       exercise("GADT 2: wordcount", activated = true) {
         // We have a list of words that we want to split in 2 blocks.
-        val block1 = Block(List("Welcome", "to", "the", "party"))
-        val block2 = Block(List("The", "world", "is", "yours"))
+        val words = List("Welcome", "to", "the", "party", "The", "world", "is", "yours")
 
         /**
          * We want to implement a wordcount.
          * 
-         * From a list of word, we want to count the letters of each word and
-         * sum all. `size` method give the letter count of a word and we just
-         * use `+` as combining function.
+         * From a list of words, we split the list in 2. Then we want to count
+         * the words of each list and sum all the counts. `size` method give
+         * the word count of a block and we just use `+` as combining function.
          */
-        val wordCount: Computation[Int] = Reduce(
-          Map(block1, word => word.size),
-          Map(block2, word => word.size),
-          (a, b) => a + b
-        )
+        def wordCount(input: List[String]): Computation[Int] = {
+          val window = 4
+          val (block1, block2) = (Block(input.take(window)), Block(input.drop(window)))
+          Reduce(
+            Map(block1, word => word.size),
+            Map(block2, word => word.size),
+            (a, b) => a + b
+          )
+        }
+
+        // We get the distributed program we need to run
+        val wcProgram = wordCount(words)
   
-        // What we will be the return type here ?
-        check(eval(wordCount) == ??)
+        // And we eval our program
+        check(eval(wcProgram) == ??)
       }
 
     }
