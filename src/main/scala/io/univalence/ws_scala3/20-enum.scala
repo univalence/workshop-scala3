@@ -46,6 +46,7 @@ object _01_simple_enum {
    * In Scala 2 generally, we tend to write an enumeration as follows.
    */
   sealed trait OldColor
+  
   object OldColor {
     case object RED   extends OldColor
     case object GREEN extends OldColor
@@ -192,27 +193,42 @@ object _03_enum_with_constructor {
 }
 
 /**
- * ==GADT==
+ * ==ADT==
  * Enumeration in Scala also support type parameters implying the
- * creation of GADTs.
+ * creation of ADTs. In this section, we will see what a ADT refers to.
  *
  * As an example, we can reproduce the Option ADT using Scala 3
  * enumerations.
  */
 object _04_adt {
 
-  enum PeutEtre[+A] {
+  /**
+   * This enum type is similar to `Option`. The supertype `PeutEtre` is like a
+   * container of a value of type `A` (the type of the value inside the
+   * `Present` subtype). `Rien` represents an absence of value while `Present`
+   * represents the contrary.
+   */
+  enum PeutEtre[A] {
+    // This is the actual container of a value  of type `A`
     case Present(a: A)
-    case Rien
+
+    // This is a empty container
+    case Rien()
 
     def isDefined: Boolean =
       this match
-        case Rien => false
+        case Rien() => false
+        // default case (`Present`)
         case _    => true
+      end match
 
+    /**
+     * `:>` express a inheritance relationship, here `B` of `map` needs to be
+     * the subtype of `A` (type of `PeutEtre`).
+     */
     def orElse[B >: A](b: B): B =
       this match
-        case Rien       => b
+        case Rien()     => b
         case Present(v) => v
   }
 
@@ -222,8 +238,8 @@ object _04_adt {
       import PeutEtre.*
 
       check(Present("123").isDefined == ??)
-      check(Rien.isDefined == ??)
-      check(Rien.orElse(10) == ??)
+      check(Rien().isDefined == ??)
+      check(Rien().orElse(10) == ??)
     }
 
   /**
@@ -248,4 +264,145 @@ object _04_adt {
     case object Second extends Cases:
       def doSomethingElse(): Unit = println("Something else")
   end Cases
+}
+
+/**
+ * ==GADT==
+ * GADTs stands for Generalised ADTs. This is a special version of ADTs.
+ * We will see that with an example.
+ *
+ * As an example, we want to modelize a Map-Reduce engine to execute distributed
+ * computations using Scala 3 enumerations. Our engine will support the
+ * operations `Map` and `Reduce`:
+ * - `Map`: will execute a given function on a given computation. The computed value
+ *    by the engine will be passed to the function.
+ * - `Reduce`: will take two computation, get the computed value of each of them,
+ *   and will then run the given function to combine the 2 values into one.
+ * 
+ * We will have an additional operation that will load a data on disk and keep
+ * them in memory for future computations. Read data will be represented as List.
+ */
+object _05_gadt {
+
+  /**
+   * This is our Engine supertype that modelize a distributed Map/Reduce
+   * computation. Note that we have a generic `A` for the value returned
+   * by the computation.
+   */
+  enum Computation[A] {
+    /**
+     * This represent data load on disk into memory. We can read multiple blocks
+     * of data for a distributed computation. It will be wise to splice the data
+     * into mutltiple blocks to avoid to exceed computer memory.
+     * 
+     * Note that in the case of `Block`, the return type will be a `List`. With
+     * a GADT, when defining a subtype we can have a more specific type.
+     */
+    case Block[B](value: List[B]) extends Computation[List[B]]
+
+    /**
+     * This a `Map` operation on a computation `arg` on which we want the
+     * function `fun` to be applied to the result of that computation. Note
+     * that the function could change the return type of the computation from
+     * a type `C` (of the initial computation) to a type `D` (the new result
+     * type). 
+     * 
+     * The type `C` will be unknown outside of `Map` (i.e. if we have
+     * a value of type `Map` we can't retrieve the type of `C`). This is 
+     * also specific to GADTs.
+     */
+    case Map[C, D](arg: Computation[C], fun: C => D) extends Computation[D]
+
+    /**
+     * This is a `Reduce` operation on two computations to combine the results
+     * of the 2 computations into a single value. To combine the computed 
+     * values we will use the given function `fun`.
+     */
+    case Reduce[X](arg1: Computation[X], arg2: Computation[X], fun: (X, X) => X)
+        extends Computation[X]
+  }
+
+  object Computation {
+    /**
+     * This method evaluate a computation by handling the different cases
+     * (Map / Reduce / Block). This function will return a result of the type
+     * `A` (the generic of `Computation`). The result type will change according
+     * to the case we are handling.
+     */
+    def eval[A](computation: Computation[A]): A = computation match {
+      /**
+       * When having a Block, we just have to return its value. That result
+       * will be of type `List[A]`. The compiler will be able to deduce that
+       * in this case `A == List`.
+       */
+      case Block(value)            => value
+
+      /**
+       * When having a `Map`, we extract the attributes (the computation and
+       * the mapping function). Then we eval the computation to get the result
+       * and apply it to the mapping function.
+       * Note that:
+       * - we don't know the type of `arg`(it's hidden), all we can do with it
+       *   is to pass it to the mapping function.
+       * - the return type is the return type of the mapping function (`A`)
+       */
+      case Map(arg, fun)           => fun(eval(arg))
+
+      /**
+       * When having a reduce, we extract the attributes (the 2 computations
+       * and the combining function). Then we eval the computations and we
+       * pass the results to the combining function. The result will be of type `A`.
+       */
+      case Reduce(arg1, arg2, fun) => fun(eval(arg1), eval(arg2))
+    }
+  }
+
+  @main
+  def _20_05_GADT_with_enum(): Unit =
+    section("PART 5 - GADT") {
+      // We import all the subtypes + eval
+      import Computation.*
+
+      exercise("GADT 1: inversed list", activated = true) {
+        /**
+         * This is our 1st Map/Reduce program.
+         * 
+         * We have a list of integers that we want to split in 2 blocks,
+         * reverse each block and concat the blocks to get original list in
+         * the reverse order. We use `reverse` in the mapping function to
+         * reverse a list and `concat` method (on List) to merge 2 lists.
+         */
+        val reversed: Computation[List[Int]] = Reduce(
+          Map(Block(List(1, 2, 3)), x => x.reverse),
+          Map(Block(List(4, 5, 6)), x => x.reverse),
+          (a, b) => b.concat(a)
+        )
+  
+        // What we will be the return type here ?
+        check(eval(reversed) == ??)
+      }
+
+      exercise("GADT 2: wordcount", activated = true) {
+        // We have a list of words that we want to split in 2 blocks.
+        val block1 = Block(List("Welcome", "to", "the", "party"))
+        val block2 = Block(List("The", "world", "is", "yours"))
+
+        /**
+         * We want to implement a wordcount.
+         * 
+         * From a list of word, we want to count the letters of each word and
+         * sum all. `size` method give the letter count of a word and we just
+         * use `+` as combining function.
+         */
+        val wordCount: Computation[Int] = Reduce(
+          Map(block1, word => word.size),
+          Map(block2, word => word.size),
+          (a, b) => a + b
+        )
+  
+        // What we will be the return type here ?
+        check(eval(wordCount) == ??)
+      }
+
+    }
 }

@@ -16,6 +16,7 @@
  */
 package io.univalence.ws_scala3
 
+import io.univalence.ws_scala3.internal.derivation.*
 import io.univalence.ws_scala3.internal.exercise_tools.*
 
 /**
@@ -397,6 +398,120 @@ object _03_typeclass {
 //        check(List(1, 2, 3).show == "[1,2,3]")
 //        check(Option(List(1, 2, 3)).show == "Some([1,2,3])")
       }
+    }
+
+  /**
+   * Hashed is a typeclass that adds the method `hashed` to types. `hashed` 
+   * computes the hash value of an instance using the attributes of a class.
+   * The computed hash value is represented as an Int.
+   */
+  trait Hashed[A] {
+    extension (value: A) def hashed: Int
+  }
+
+  /**
+   * With `HashedDerivation`, we will benefit from utilies to define typeclass
+   * instances more easily. We will say more about it later.
+   * 
+   * Here there are missing implementations, you will need to implement them.
+   */
+  object Hashed extends HashedDerivation {
+    /**
+     * TODO Implement an instance of hashed for type `Int`.
+     * Uncomment the next line and fill the missing parts.
+     * 
+     * Hint: A hash value of an `Int` is the integer itself.
+     */
+    // given Hashed[Int] ...
+
+    /**
+     * TODO Implement an instance of hashed for type `String`.
+     * Uncomment the next line and fill the missing parts.
+     * 
+     * Hint: A hash value of a `String` is the size of that `String`.
+     */
+    // given Hashed[String] ...
+
+    /**
+     * TODO Implement an instance of hashed for type `Boolean`.
+     * Uncomment the next line and fill the missing parts.
+     * 
+     * Hint: An hash for a `Boolean` can be obtained by converting the boolean
+     * value to Int. You can use the instance of `Int` for the implementation.
+     */
+    // given ... Hashed[Boolean] ...
+  }
+
+  /**
+   * We define a class for which we want to define an instance of `Hash`.
+   */
+  case class Player(name: String, rank: Int)
+
+  /**
+   * TODO Uncomment the following code after implementing the instances for 
+   * types `Int`, `String` and `Boolean`. `Hashed.derived` will create 
+   * automatically an instance of `Hash` for our class.
+   */
+
+  // object Player {
+  //   given Hashed[Player] = Hashed.derived
+  // }
+
+  /**
+   * TODO Uncomment the following code after implementing the instances for
+   * types `Int`, `String` and `Boolean`. The `derives Hashed` will create
+   * automatically an instance of `Hash`. This is a syntactic sugar Scala
+   * offer with typeclasses. We do not need anymore the companion object.
+   * 
+   * Note that 3 instances will be created for `Doctor`, `Intern` and
+   * `Employee` (which will use the previous ones).
+   */
+
+  // enum Employee derives Hashed {
+  //   case Doctor(email: String, department: Int, isSenior: Boolean)
+
+  //   case Intern(email: String, age: Int)
+  // }
+
+
+  @main
+  def _40_07_hashed_typeclass(): Unit =
+    section("PART 6 - Deriving a typeclass") {
+
+      exercise("Typeclass Hashed: first examples", activated = true) {
+        // TODO Uncomment the lines below one by one and implement the necessary given instances.
+
+        // import Hashed.given
+        // check(1.hashed == ??)
+
+        // check("hello".hashed == ??)
+
+        // check(true.hashed == ??)
+
+        // check(Player("Chris", 4).hashed == ??)
+
+        // check(Employee.Intern("bob@hello.com", 1).hashed == ??)
+
+        // check(Employee.Doctor("joe@hello.com", 1, true).hashed == ??)
+      }
+
+      exercise("Typeclass Hashed: Book example", activated = true) {
+        /**
+          * TODO: For the next lines, we want to implement a class hierarchy that will derive Hashed.
+          *
+          * Please implement the `enum` type `Book` (instanciated below) as following.
+          * - a book can be an audio book or a printed one
+          * - an audio book have a title, a duration (number of seconds) and a rating
+          * - a printed book also have a title, a numberOfPages and an attribute available (true if a copy can be buy).
+          * 
+          * Uncomment the following lines after implementing the Book type.
+          */
+
+        // check(Book.Audio(title = "Dune", duration = 14400, rating = 4).hashed == ??)
+
+        // check(Book.Printed(title = "1984", numberOfPages = 300, available = false).hashed == ??)
+      }
+
     }
 }
 
