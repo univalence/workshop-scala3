@@ -22,7 +22,7 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  * =Hello Scala 3=
  * This is your first program in Scala 3! Well, it's even your first
  * program'''''s''''' in Scala 3. As you will see, we can declare many
- * main toplevel functions in single file.
+ * main toplevel functions in a single file.
  *
  * So, in this file, you will see alternative ways to declare a main
  * function introduced in Scala 3.
@@ -34,9 +34,11 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  * no toplevel structure (object or class) and add the `@main`
  * annotation. The main function can have any name.
  *
- * To launch this main:
+ * To launch this main (see readme for detailled instructions):
  *   - under IntelliJ IDEA, just click on the green arrow in the gutter
  *     just below, then click "Run".
+ *   - under VS Code (with Metals extension), click on the `run` button 
+ *     above the @main annotation
  *   - under SBT, notice this filename and the main function below. Type
  *     `run` and select the item you are looking for in the menu.
  */

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.univalence.ws_scala3.internal
+package io.univalence.ws_scala3
 
 import io.univalence.ws_scala3.internal.exercise_tools.*
 
@@ -44,7 +44,7 @@ object introduction {
        * Each section is composed of exercises or sub-sections. For
        * exercises, there is also a title. This one is also displayed in
        * the program output. You have also another parameter named
-       * `activated`, that we will later.
+       * `activated`, that we will see later.
        */
       exercise("An exercise OK", activated = true) {
         val a = 42
@@ -56,9 +56,8 @@ object introduction {
          * If the expression is `true`, the display shows the expression
          * and a OK message.
          *
-         * If the expression is `false`, the display shows the
-         * expression and a short failure message (you have to guess why
-         * ;) )
+         * If the expression is `false`, the display shows the expression
+         * and a short failure message (you have to guess why ;) )
          */
         check(a == 42)
       }
@@ -115,13 +114,17 @@ object introduction {
        * you have to uncomment the body and solve the exercise.
        */
       exercise("Exercise with commented content", activated = false) {
-        // TODO uncomment the lines below and solve the exercise.
+        /**
+         * TODO uncomment the lines below and solve the
+         * exercise by adding `val a = 42` inside `b` body.
+         */
 //        object b {}
 //
 //        check(b.a == 42)
       }
 
       exercise("An exercise that fails", activated = false) {
+        // TODO Fix the implementation so that the check will succeed
         val c: Int =
           if (true)
             throw new Exception()
