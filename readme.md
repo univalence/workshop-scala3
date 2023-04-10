@@ -11,6 +11,7 @@ $ git clone https://github.com/univalence/workshop-scala3
 
 In this workshop, we will focus on:
 
+* basic scala concepts for beginners: variables, constants, functions, control structure, class, trait, pattern-matching...
 * Toplevel main function
 * Block delimitation
 * Enum type
@@ -18,6 +19,7 @@ In this workshop, we will focus on:
 * Contextual abstraction and typeclass
 * Selectable (structural types)
 * Metaprogramming with inline
+* Opaque types
 
 ## Exercises
 
@@ -55,7 +57,24 @@ you want to solve it.
 
 - The output will be displayed in the `console`
 
-### VS Code
+### Visual Studio Code
+
+When using Scala with VS Code, please consider installing the `metals` extension for VS Code which add IDE functionnality to VS Code (for `Scala` projects).
+For this section, we will assume you have installed the `metals` extension. If not please go to the [SBT](#sbt) section.
+
+- When opening the project, a prompt suggestion to import the build will appear, click on `Import build` button
+
+- Open the file you want to run (e.g `00-introduction.scala`)
+
+- Above the `@main` annotation, click on the `run` button to run the `main` method
+
+- The output will be displayed in the `TERMINAL` tab into the bottom panel
+
+- Inside the temrinal tab, press any key to close the run prompt
+
+For more details about `metals`, please refer to the official [documentation](https://scalameta.org/metals/docs/editors/vscode/#running-and-debugging-your-code).
+
+### SBT
 
 - launch the terminal: `$> sbt`
 
@@ -72,7 +91,6 @@ We will not see this other topics:
 * Union type: ability to express that an element can be of one type or
   another (eg. `String | Null`)
 * Intersection type: (eg. `A & B`)
-* Opaque type: bringing type aliases without overhead
 * Trait parameter
 * Export
 * Parameter untupling: now, you can write `l.foldLeft(0)((sum, v) => sum + v)`
