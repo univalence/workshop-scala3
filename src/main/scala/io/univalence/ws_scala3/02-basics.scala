@@ -1,7 +1,6 @@
 package io.univalence.ws_scala3
 
 import io.univalence.ws_scala3.internal.exercise_tools.*
-import scala.collection.immutable.LazyList.cons
 
 /**
  * Before diving into the basics of the Scala language, we need to introduce the basics types
@@ -860,6 +859,30 @@ def _02_06_match(): Unit = {
       check(whatToEat(garden.get(1)) == ??)
 
       check(whatToEat(garden.get(3)) == ??)
+    }
+
+    exercise("Pattern matching on a regex", activated = true) {
+      /**
+       * Scale Regex is based on the Java regex package. It provides a very
+       * clean and concise API. Additionally, with pattern matching, it's even
+       * easier to use.
+       */
+      val dateRegex = "(\\d{4})-(\\d{2})-(\\d{2})".r // or raw"(\d{4})-(\d{2})-(\d{2})".r
+
+      /**
+       * We can also do a pattern-matching on a `regex`. On our example, when
+       * the input matches the regex, we can extract the capturing groups into
+       * variables we can use inside our case.
+       */
+      def isDayGood(dateStr: String): String = dateStr match {
+        case dateRegex(year, month, day) => s"In $year, on $month/$day, it was a good day."
+
+        case other => s"Oh no, '$other' ? what a bad day."
+      }
+
+      check(isDayGood("2004-01-20") == ??)
+
+      check(isDayGood("hello") == ??)
     }
 
   }

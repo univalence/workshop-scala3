@@ -24,7 +24,7 @@ import io.univalence.ws_scala3.internal.exercise_tools.*
  * first focus on function body, before taking a look the other
  * constructs.
  *
- * In terms of new syntax, for exemple, curly braces for the function
+ * In terms of new syntax, for example, curly braces for the function
  * body are not necessary anymore, if the function has many lines. So,
  * it is up to you to add or not those braces.
  *
