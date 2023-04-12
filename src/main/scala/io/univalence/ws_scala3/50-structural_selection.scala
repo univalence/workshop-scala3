@@ -40,6 +40,8 @@ object _01_structural_selection {
    * Let's define a type constructor. The fields and their value are
    * given with the parameter `elems`. This form of parameter makes then
    * easier to write down the field value.
+   * 
+   * Note that `*` in Scala is for variadic params.
    */
   class Data(elems: (String, Any)*) extends Selectable {
 

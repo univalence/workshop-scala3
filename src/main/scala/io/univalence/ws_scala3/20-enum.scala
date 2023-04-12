@@ -234,7 +234,7 @@ object _04_adt {
 
   @main
   def _20_04_ADT_with_enum(): Unit =
-    section("PART 4 - GADT") {
+    section("PART 4 - ADT") {
       import PeutEtre.*
 
       check(Present("123").isDefined == ??)
@@ -269,14 +269,14 @@ object _04_adt {
 /**
  * ==GADT==
  * GADTs stands for Generalised ADTs. This is a special version of ADTs.
- * We will see that with an example.
+ * We will see the difference between the 2 with an example.
  *
  * As an example, we want to modelize a Map-Reduce engine to execute distributed
  * computations using Scala 3 enumerations. Our engine will support the
  * operations `Map` and `Reduce`:
  * - `Map`: will execute a given function on a given computation. The computed value
  *    by the engine will be passed to the function.
- * - `Reduce`: will take two computation, get the computed value of each of them,
+ * - `Reduce`: will take two computations, get the computed value of each of them,
  *   and will then run the given function to combine the 2 values into one.
  * 
  * We will have an additional operation that will load a data on disk and keep
@@ -285,7 +285,7 @@ object _04_adt {
 object _05_gadt {
 
   /**
-   * This is our Engine supertype that modelize a distributed Map/Reduce
+   * This is our Engine supertype that modelizes a distributed Map/Reduce
    * computation. Note that we have a generic `A` for the value returned
    * by the computation.
    * For simplicity, we will consider for our example that our Map/Reduce
